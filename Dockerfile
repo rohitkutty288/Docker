@@ -1,4 +1,3 @@
-# Use Node.js LTS
 FROM node:18
 
 # Create app directory
