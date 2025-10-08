@@ -3,19 +3,30 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Serve static files from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
-// Optional routes for menu links
-app.get('/about', (req, res) => {
-    res.send('<h1>About Page</h1><p>This is the about page.</p><a href="/">Back</a>');
-});
+// API endpoint for calculator
+app.post('/calculate', (req, res) => {
+    const { num1, num2, operation } = req.body;
 
-app.get('/contact', (req, res) => {
-    res.send('<h1>Contact Page</h1><p>Contact us at contact@example.com</p><a href="/">Back</a>');
+    let result;
+    switch (operation) {
+        case 'add': result = num1 + num2; break;
+        case 'subtract': result = num1 - num2; break;
+        case 'multiply': result = num1 * num2; break;
+        case 'divide':
+            if (num2 === 0) return res.json({ error: "Cannot divide by zero" });
+            result = num1 / num2;
+            break;
+        default:
+            return res.json({ error: "Invalid operation" });
+    }
+
+    res.json({ result });
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
 
